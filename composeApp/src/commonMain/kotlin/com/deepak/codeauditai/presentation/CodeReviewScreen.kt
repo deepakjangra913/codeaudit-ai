@@ -16,11 +16,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.deepak.codeauditai.data.repository.CodeReviewRepositoryImpl
 import com.deepak.codeauditai.domain.usecase.ReviewCodeUseCase
+import com.deepak.codeauditai.models.Severity
 
 @Preview
 @Composable
@@ -49,7 +51,7 @@ fun CodeReviewScreen() {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                    .padding(horizontal = 16.dp),
                 value = state.code,
                 placeholder = {
                     Text(
@@ -61,8 +63,25 @@ fun CodeReviewScreen() {
 
             Column {
                 state.result.forEach { item ->
+
+                    val color = when (item.severity) {
+                        Severity.CRITICAL -> Color.Red
+                        Severity.WARNING -> Color.Yellow
+                        Severity.SUGGESTION -> Color.Gray
+                    }
+
                     Text(
-                        text = item.description
+                        text = "• ${item.description}",
+                        color = color,
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+
+                state.error?.let { error ->
+                    Text(
+                        text = error,
+                        color = Color.Red
                     )
                 }
             }
@@ -71,11 +90,13 @@ fun CodeReviewScreen() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(16.dp)
                 .height(80.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
+                modifier = Modifier.fillMaxWidth(),
                 enabled = state.code.isNotEmpty(),
                 onClick = {
                     viewModel.analyseCode()

@@ -1,6 +1,10 @@
 package com.deepak.codeauditai.ai
 
-class GeminiService {
+import io.ktor.client.HttpClient
+
+class GeminiService (
+    private val client: HttpClient
+){
 
     suspend fun analyseCode(code: String): String {
         // TODO (Call gemini api)
