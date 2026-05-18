@@ -20,16 +20,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.deepak.codeauditai.ai.GeminiService
 import com.deepak.codeauditai.data.repository.CodeReviewRepositoryImpl
 import com.deepak.codeauditai.domain.usecase.ReviewCodeUseCase
 import com.deepak.codeauditai.models.Severity
+import com.deepak.codeauditai.network.createHttpClient
+import com.deepak.codeauditai.rules.RuleEngine
 
 @Preview
 @Composable
 fun CodeReviewScreen() {
 
     val viewModel = remember {
-        val repository = CodeReviewRepositoryImpl()
+        val client = createHttpClient()
+        val geminiService = GeminiService(client)
+        val repository = CodeReviewRepositoryImpl(
+            ruleEngine = RuleEngine(),
+            geminiService = geminiService
+        )
         val useCase = ReviewCodeUseCase(repository)
         CodeReviewViewModel(useCase)
     }
