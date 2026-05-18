@@ -1,13 +1,64 @@
 package com.deepak.codeauditai.ai
 
+import com.deepak.codeauditai.ai.model.Content
+import com.deepak.codeauditai.ai.model.GeminiRequest
+import com.deepak.codeauditai.ai.model.GeminiResponse
+import com.deepak.codeauditai.ai.model.Part
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 
-class GeminiService (
+class GeminiService(
     private val client: HttpClient
-){
+) {
 
     suspend fun analyseCode(code: String): String {
-        // TODO (Call gemini api)
-        return "AI response"
+        val prompt = """
+           You are a Senior Android engineer.
+           
+           Analyse the following Kotlin/Jetpack code.
+           
+           Provide: 
+           - Code quality issues
+           - Performance concerns
+           - Best practice suggestions
+           
+           Code: 
+           $code
+       """.trimIndent()
+
+        val response: GeminiResponse =
+            client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent")
+            {
+                // TODO : change this after secure implementation of key
+                parameter("key", "")
+
+                contentType(ContentType.Application.Json)
+
+                setBody(
+                    GeminiRequest(
+                        contents = listOf(
+                            Content(
+                                parts = listOf(
+                                    Part(prompt)
+                                )
+                            )
+                        )
+                    )
+                )
+            }.body()
+
+        return response
+            .candidates
+            .firstOrNull()
+            ?.content
+            ?.parts
+            ?.firstOrNull()
+            ?.text
+            ?: "No AI Response"
     }
 }
