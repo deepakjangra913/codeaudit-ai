@@ -9,15 +9,15 @@ data class GeminiResponse(
 
 @Serializable
 data class Candidate(
-    val content: GeminiContent
+    val content: GeminiContent? = null
 )
 
 @Serializable
 data class GeminiContent(
-    val parts: List<GeminiPart>
+    val parts: List<GeminiPart> = emptyList()
 )
 
 @Serializable
 data class GeminiPart(
-    val text: String
+    val text: String = ""
 )

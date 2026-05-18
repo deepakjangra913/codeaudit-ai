@@ -4,13 +4,15 @@ import com.deepak.codeauditai.ai.model.Content
 import com.deepak.codeauditai.ai.model.GeminiRequest
 import com.deepak.codeauditai.ai.model.GeminiResponse
 import com.deepak.codeauditai.ai.model.Part
+import com.deepak.codeauditai.config.AppConfig
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import kotlinx.serialization.json.Json
+import io.ktor.client.call.body
 
 class GeminiService(
     private val client: HttpClient
@@ -31,11 +33,11 @@ class GeminiService(
            $code
        """.trimIndent()
 
-        val response: GeminiResponse =
-            client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent")
+        val httpResponse =
+            client.post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent")
             {
-                // TODO : change this after secure implementation of key
-                parameter("key", "")
+                parameter("key", AppConfig.geminiApiKey)
+                println("API KEY -> ${AppConfig.geminiApiKey}")
 
                 contentType(ContentType.Application.Json)
 
@@ -50,7 +52,13 @@ class GeminiService(
                         )
                     )
                 )
-            }.body()
+            }
+
+        val rawBody = httpResponse.body<String>()
+
+        println(rawBody)
+
+        val response = Json.decodeFromString<GeminiResponse>(rawBody)
 
         return response
             .candidates
