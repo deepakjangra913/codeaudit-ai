@@ -22,7 +22,7 @@ class GeminiResponseParser {
 
                 reviewItems.add(
                     ReviewItem(
-                        title = currentCategory.name,
+                        title = currentCategory.name.replace("_", " "),
                         description = description,
                         severity = currentCategory.severity,
                         category = currentCategory

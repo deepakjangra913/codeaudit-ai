@@ -1,7 +1,6 @@
-package com.deepak.codeauditai.presentation
+package com.deepak.codeauditai.presentation.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,9 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.deepak.codeauditai.ai.GeminiService
+import com.deepak.codeauditai.ai.parser.GeminiResponseParser
 import com.deepak.codeauditai.data.repository.CodeReviewRepositoryImpl
 import com.deepak.codeauditai.domain.usecase.ReviewCodeUseCase
 import com.deepak.codeauditai.network.createHttpClient
+import com.deepak.codeauditai.presentation.CodeReviewViewModel
 import com.deepak.codeauditai.rules.RuleEngine
 
 @Preview
@@ -39,9 +40,11 @@ fun CodeReviewScreen() {
     val viewModel = remember {
         val client = createHttpClient()
         val geminiService = GeminiService(client)
+        val geminiResponseParser = GeminiResponseParser()
         val repository = CodeReviewRepositoryImpl(
             ruleEngine = RuleEngine(),
-            geminiService = geminiService
+            geminiService = geminiService,
+            geminiResponseParser = geminiResponseParser
         )
         val useCase = ReviewCodeUseCase(repository)
         CodeReviewViewModel(useCase)
