@@ -7,11 +7,13 @@ data class ReviewResult(
 data class ReviewItem(
     val title: String,
     val description: String,
-    val severity: Severity
+    val severity: Severity,
+    val category: ReviewCategory
 )
 
 enum class Severity {
     CRITICAL,
     WARNING,
-    SUGGESTION
+    SUGGESTION,
+    INFO,
 }
