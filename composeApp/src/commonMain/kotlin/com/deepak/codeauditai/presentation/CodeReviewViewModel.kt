@@ -10,6 +10,32 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsible for managing the UI state
+ * and orchestration logic for the code review screen.
+ *
+ * This ViewModel handles:
+ * - code input updates
+ * - triggering AI/code analysis
+ * - loading state management
+ * - error handling
+ * - exposing structured review results to the UI
+ *
+ * The ViewModel follows a unidirectional state flow
+ * approach using [StateFlow] to provide reactive and
+ * lifecycle-aware UI updates.
+ *
+ * Workflow:
+ * 1. User pastes Kotlin/Compose code
+ * 2. UI updates the current code state
+ * 3. Analysis request is triggered
+ * 4. Use case performs rule-based + AI review
+ * 5. UI state updates with results or errors
+ *
+ * @property useCase Handles the business logic for
+ * reviewing source code and generating review results.
+ */
+
 class CodeReviewViewModel(private val useCase: ReviewCodeUseCase) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CodeReviewUiState())
