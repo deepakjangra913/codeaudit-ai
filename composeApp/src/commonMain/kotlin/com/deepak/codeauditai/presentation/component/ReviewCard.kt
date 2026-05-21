@@ -20,6 +20,27 @@ import com.deepak.codeauditai.models.ReviewItem
 import com.deepak.codeauditai.models.Severity
 import com.deepak.codeauditai.presentation.extensions.gradientBrush
 
+/**
+ * Displays a visually styled review card representing
+ * a single AI or rule-based code analysis result.
+ *
+ * The card appearance dynamically changes based on
+ * the severity level of the review item by applying
+ * severity-specific gradient backgrounds.
+ *
+ * This composable is used to present:
+ * - performance warnings
+ * - code quality suggestions
+ * - best practice recommendations
+ * - architecture insights
+ *
+ * @param modifier Modifier used to decorate or
+ * adjust the layout behavior of the card.
+ *
+ * @param reviewItem Contains the review metadata
+ * including title, description, severity,
+ * and review category.
+ */
 @Composable
 fun ReviewCard(
     modifier: Modifier = Modifier,
